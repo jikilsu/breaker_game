@@ -111,3 +111,53 @@ p {
     font-family: 'Orbitron', sans-serif;
     letter-spacing: 1px;
 }
+
+.music-toggle {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: rgba(0, 243, 255, 0.1);
+    border: 2px solid var(--neon-blue);
+    color: var(--text-color);
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 10px rgba(0, 243, 255, 0.3);
+    z-index: 1000;
+}
+
+.music-toggle:hover {
+    background: rgba(0, 243, 255, 0.2);
+    box-shadow: 0 0 20px rgba(0, 243, 255, 0.5);
+    transform: scale(1.05);
+}
+
+.music-toggle.off {
+    border-color: #666;
+    box-shadow: 0 0 10px rgba(102, 102, 102, 0.3);
+}
+
+.music-toggle.off:hover {
+    box-shadow: 0 0 20px rgba(102, 102, 102, 0.5);
+}
+
+.music-icon {
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.music-icon svg {
+    display: block;
+}
+
+.music-text {
+    font-weight: 600;
+}

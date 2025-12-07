@@ -17,7 +17,7 @@ class Game {
         this.particleSystem = new ParticleSystem(this);
 
         this.input = new InputHandler(this);
-        
+
         this.lastTime = 0;
         this.shakeTime = 0;
         this.shakeMagnitude = 0;
@@ -32,8 +32,40 @@ class Game {
             winScore: document.getElementById('win-score')
         };
 
+        // Initialize sound manager
+        this.soundManager = new SoundManager();
+        this.setupMusicToggle();
+
         this.loop = this.loop.bind(this);
         requestAnimationFrame(this.loop);
+    }
+
+    setupMusicToggle() {
+        const musicToggle = document.getElementById('music-toggle');
+        const iconOff = musicToggle.querySelector('.icon-off');
+        const iconOn = musicToggle.querySelector('.icon-on');
+        const musicText = musicToggle.querySelector('.music-text');
+        let isMusicOn = false;
+
+        musicToggle.addEventListener('click', () => {
+            this.soundManager.resume(); // Resume audio context on user interaction
+
+            if (isMusicOn) {
+                this.soundManager.stopBackgroundMusic();
+                iconOff.style.display = 'block';
+                iconOn.style.display = 'none';
+                musicText.textContent = '배경음 OFF';
+                musicToggle.classList.add('off');
+                isMusicOn = false;
+            } else {
+                this.soundManager.startBackgroundMusic();
+                iconOff.style.display = 'none';
+                iconOn.style.display = 'block';
+                musicText.textContent = '배경음 ON';
+                musicToggle.classList.remove('off');
+                isMusicOn = true;
+            }
+        });
     }
 
     start() {
@@ -194,33 +226,37 @@ class Ball {
         if (this.x - this.radius < 0) {
             this.x = this.radius;
             this.dx = -this.dx;
+            this.game.soundManager.playWallBounce();
         }
         if (this.x + this.radius > this.game.width) {
             this.x = this.game.width - this.radius;
             this.dx = -this.dx;
+            this.game.soundManager.playWallBounce();
         }
         if (this.y - this.radius < 0) {
             this.y = this.radius;
             this.dy = -this.dy;
+            this.game.soundManager.playWallBounce();
         }
 
         // Paddle collision
         if (this.checkCollision(this.game.paddle)) {
             this.dy = -Math.abs(this.dy); // Always bounce up
             this.y = this.game.paddle.y - this.radius;
-            
+
             // Add some English based on where it hit the paddle
             const hitPoint = this.x - (this.game.paddle.x + this.game.paddle.width / 2);
-            this.dx = hitPoint * 0.005; 
-            
+            this.dx = hitPoint * 0.005;
+
             // Speed up slightly
-            const currentSpeed = Math.sqrt(this.dx*this.dx + this.dy*this.dy);
-            if(currentSpeed < this.maxSpeed) {
-                 this.dx *= 1.05;
-                 this.dy *= 1.05;
+            const currentSpeed = Math.sqrt(this.dx * this.dx + this.dy * this.dy);
+            if (currentSpeed < this.maxSpeed) {
+                this.dx *= 1.05;
+                this.dy *= 1.05;
             }
 
             this.game.particleSystem.createExplosion(this.x, this.y + this.radius, '#00f3ff', 10);
+            this.game.soundManager.playPaddleBounce();
         }
 
         // Brick collision
@@ -231,8 +267,9 @@ class Ball {
                 this.dy = -this.dy; // Simple bounce
                 this.game.score += 10;
                 this.game.updateUI();
+                this.game.soundManager.playBrickBreak();
                 this.game.screenShake(100, 5);
-                
+
                 if (this.game.brickManager.checkWin()) {
                     this.game.win();
                 }
@@ -259,7 +296,7 @@ class Ball {
 
         if (this.x < rect.x) testX = rect.x;
         else if (this.x > rect.x + rect.width) testX = rect.x + rect.width;
-        
+
         if (this.y < rect.y) testY = rect.y;
         else if (this.y > rect.y + rect.height) testY = rect.y + rect.height;
 
@@ -291,7 +328,7 @@ class BrickManager {
         this.marginTop = 80;
         this.bricks = [];
         this.colors = ['#ff00ff', '#ff00aa', '#ff0055', '#ff0000', '#ff5500'];
-        
+
         // Calculate brick size
         this.brickWidth = (this.game.width - (this.cols + 1) * this.padding) / this.cols;
         this.brickHeight = 30;
@@ -334,9 +371,9 @@ class Brick {
     hit() {
         this.active = false;
         this.game.particleSystem.createExplosion(
-            this.x + this.width / 2, 
-            this.y + this.height / 2, 
-            this.color, 
+            this.x + this.width / 2,
+            this.y + this.height / 2,
+            this.color,
             20
         );
     }
