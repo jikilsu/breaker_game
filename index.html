@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dr.부엉이’s Galaxy Breaker</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div id="game-container">
+        <div id="ui-layer">
+            <div id="score-board">Score: <span id="score">0</span></div>
+            <div id="lives-board">Lives: <span id="lives">3</span></div>
+        </div>
+        <canvas id="gameCanvas"></canvas>
+        <div id="start-screen" class="overlay">
+            <h1>Dr.부엉이’s<br>GALAXY BREAKER</h1>
+            <p>Press SPACE to Start</p>
+        </div>
+        <div id="game-over-screen" class="overlay hidden">
+            <h1>GAME OVER</h1>
+            <p>Final Score: <span id="final-score">0</span></p>
+            <p>Press SPACE to Restart</p>
+        </div>
+        <div id="win-screen" class="overlay hidden">
+            <h1>YOU WIN!</h1>
+            <p>Score: <span id="win-score">0</span></p>
+            <p>Press SPACE to Play Again</p>
+        </div>
+        <div id="copyright">© Dr.부엉이. All rights reserved.</div>
+    </div>
+    <script src="game.js"></script>
+</body>
+
+</html>
